@@ -18,7 +18,7 @@ const getImages = (query) => {
   fetch(`https://pixabay.com/api/?key=${KEY}=${query}&image_type=photo&pretty=true`)
     .then(response => response.json())
     .then(data => showImages(data.hits))
-    .catch(err => console.log(err))
+    .catch(error => displayError("Sorry,failed to load data..please try again later!"))
 }
 
 // show images 
@@ -26,14 +26,14 @@ const showImages = (images) => {
   imagesArea.style.display = 'block';
   toggleFunction();
   gallery.innerHTML = '';
-  // show gallery title
-  galleryHeader.style.display = 'flex';
   images.forEach(image => {
+    // show gallery title
+    galleryHeader.style.display = 'flex';
+    //  //
     let div = document.createElement('div');
     div.className = 'col-lg-3 col-md-4 col-xs-6 img-item mb-2';
     div.innerHTML = ` <img class="img-fluid img-thumbnail" onclick=selectItem(event,"${image.webformatURL}") src="${image.webformatURL}" alt="${image.tags}">`;
     gallery.appendChild(div);
-    // toggleFunction();
   })
 
 }
@@ -47,7 +47,7 @@ const selectItem = (event, img) => {
   if (item === -1) {
     sliders.push(img);
   } else {
-    alert('Hey, Already added !')
+    // alert('Hey, Already added !')
   }
 }
 var timer
@@ -68,22 +68,28 @@ const createSlider = () => {
 
   sliderContainer.appendChild(prevNext)
   document.querySelector('.main').style.display = 'block';
-  // hide image aria
+  // hide image area
   imagesArea.style.display = 'none';
   const duration = document.getElementById('duration').value || 1000;
-  sliders.forEach(slide => {
-    let item = document.createElement('div')
-    item.className = "slider-item";
-    item.innerHTML = `<img class="w-100"
+  if (duration > 0) {
+    sliders.forEach(slide => {
+      let item = document.createElement('div')
+      item.className = "slider-item";
+      item.innerHTML = `<img class="w-100"
     src="${slide}"
     alt="">`;
-    sliderContainer.appendChild(item)
-  })
-  changeSlide(0)
-  timer = setInterval(function () {
-    slideIndex++;
-    changeSlide(slideIndex);
-  }, duration);
+      sliderContainer.appendChild(item);
+    })
+    changeSlide(0);
+    timer = setInterval(function () {
+      slideIndex++;
+      changeSlide(slideIndex);
+    }, duration);
+  } else {
+    alert("please put a valid duration!!");
+    imagesArea.style.display = 'block';
+  }
+
 }
 
 // change slider index 
@@ -116,7 +122,7 @@ searchBtn.addEventListener('click', function () {
   document.querySelector('.main').style.display = 'none';
   clearInterval(timer);
   const search = document.getElementById('search');
-  getImages(search.value)
+  getImages(search.value);
   sliders.length = 0;
 })
 
@@ -139,3 +145,8 @@ searchField.addEventListener("keypress", function (event) {
     searchButton.click();
   }
 });
+// // error function //
+// const displayError = error => {
+//   const errorTag = document.getElementById("error-message");
+//   errorTag.innerText = error;
+// }
