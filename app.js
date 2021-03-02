@@ -32,8 +32,9 @@ const showImages = (images) => {
     //  //
     let div = document.createElement('div');
     div.className = 'col-lg-3 col-md-4 col-xs-6 img-item mb-2';
-    div.innerHTML = ` <img class="img-fluid img-thumbnail" onclick=selectItem(event,"${image.webformatURL}") src="${image.webformatURL}" alt="${image.tags}">`;
+    div.innerHTML = ` <img id="image-thumbnail" class="img-fluid img-thumbnail" onclick=selectItem(event,"${image.webformatURL}") src="${image.webformatURL}" alt="${image.tags}">`;
     gallery.appendChild(div);
+
   })
 
 }
@@ -46,8 +47,9 @@ const selectItem = (event, img) => {
   let item = sliders.indexOf(img);
   if (item === -1) {
     sliders.push(img);
+    toggleSelect(true);
   } else {
-    // alert('Hey, Already added !')
+    toggleSelect(false);
   }
 }
 var timer
@@ -57,7 +59,7 @@ const createSlider = () => {
     alert('Select at least 2 image.')
     return;
   }
-  // crate slider previous next area
+  // create slider previous next area
   sliderContainer.innerHTML = '';
   const prevNext = document.createElement('div');
   prevNext.className = "prev-next d-flex w-100 justify-content-between align-items-center";
@@ -137,6 +139,19 @@ const toggleFunction = () => {
   spinner.classList.toggle('d-none');
   images.classList.toggle('d-none');
 }
+const toggleSelect = (show) => {
+  let imageThumb = document.getElementById("image-thumbnail");
+  if (show) {
+    imageThumb.classList.add('added');
+  } else {
+    imageThumb.classList.remove('added');
+  }
+}
+// let toggleImage = document.getElementById("image-thumbnail")
+// toggleImage.addEventListener("click", function () {
+//   toggleSelect(true);
+//   toggleSelect(false);
+// })
 // Enter key trigger search//
 let searchButton = document.getElementById("search-btn");
 let searchField = document.getElementById("search");
@@ -146,7 +161,7 @@ searchField.addEventListener("keypress", function (event) {
   }
 });
 // // error function //
-// const displayError = error => {
-//   const errorTag = document.getElementById("error-message");
-//   errorTag.innerText = error;
-// }
+const displayError = error => {
+  const errorTag = document.getElementById("error-message");
+  errorTag.innerText = error;
+}
